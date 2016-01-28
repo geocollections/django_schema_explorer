@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SARV database schema</title>
+    <link rel="stylesheet" href="/static/style.css?version2" type="text/css" />
+</head>
+<body>
+    <div id='main' >
+
+        <div id='schema-tables'>
+            <h2>Database tables:</h2>
+            <ul>
+                {% for table in table_list %}
+                    <li><a href="http://{{url_root}}/{{table}}/">{{ table }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id='schema-description' >
+            {% if table %}
+                <h1>{{table}}</h1>
+
+                {% if contents %}<p><strong>Contents: </strong>{{contents}}</p>{% endif %}
+                {% if description %}<p><strong>Description: </strong>{{description}}</p>{% endif %}
+                <p><strong>Referencing tables: </strong>
+                    {% if referencing_tables %}
+                        {% for ref_table in referencing_tables %}
+                            <a href="http://{{url_root}}/{{ref_table}}/"> {{ ref_table }} </a> |
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </p>
+                <br></br>
+
+                <table cellpadding=0 cellspacing=0 style='border: solid 1px #999;' class='results-table'>
+                    <tr>
+                        <th>Model field</th>
+                        <th>Database column</th>
+                        <th>Data type</th>
+                        {% if field_desc %}<th>Description</th>{% endif %}
+                        <th>Referenced table</th>
+                    </tr>
+                    {% for field in fields %}
+                        <tr>
+                            <td valign='top'><b>{{field.name}}</b></td>
+                            <td valign='top'>{{field.db_column}}</td>
+                            <td valign='top'>{{field.field_type}}</td>
+                            {% if field_desc %}
+                                <td valign='top'>{{field.description}}</td>
+                            {% endif %}
+                            {% if field.referenced_table %}
+                                <td valign='top'><a href='http://{{url_root}}/{{field.referenced_table}}/'>{{field.referenced_table}}</a></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+                <br></br>
+
+               	<div>
+			        <a href="/static/schema_imgs/{{graph_file}}" target="_blank">
+	                <img src="/static/schema_imgs/{{graph_file}}" alt="" style="position: absolute; margin: auto; max-height:800px; max-width:100%; position: center center;"/></a>
+	            </div>
+ 
+            {%else%}
+                {%if error%}
+                    <h1>{{error}}</h1>
+                {%else%}
+                    <h1>Description of the database</h1>
+                    <p> Description of the database </p>
+                {% endif %}
+            {% endif %}
+
+        </div>
+
+
+
+    </div>
+
+</body>
+
+
+
